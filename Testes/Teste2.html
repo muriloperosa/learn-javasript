@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <button onclick="teste(1)">Clique 1</button>
+    <button onclick="teste(2)">Clique 2</button>
+    <button onclick="teste(3)">Clique 3</button>
+    
+
+<script>
+   
+   let click1 = false;
+   let click2 = false;
+   let click3 = false;
+
+    function teste(num){
+       if(num == 1)
+        click1 = true;
+       else if(num == 2)
+        click2 = true;
+       else
+        click3 = true;
+
+        alert(`1- ${click1} 2- ${click2} 3- ${click3}`)
+    }
+
+
+</script>
+</body>
+</html>
