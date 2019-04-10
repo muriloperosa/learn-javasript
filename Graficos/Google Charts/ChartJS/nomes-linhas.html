@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Nomes - Comparativo</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../../scripts/ibge.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Nomes:</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <form class="form-inline my-2 my-lg-0 ">
+                <input class="form-control mr-sm-2" type="text" required id="nome1" placeholder="Nome 1" pattern="[a-zA-Z0-9]+"
+                    aria-label="Search">
+                <input class="form-control mr-sm-2" type="text" required id="nome2" placeholder="Nome 2" pattern="[a-zA-Z0-9]+"
+                    aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" id="btnPesquisar">Pesquisar</button>
+            </form>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="chart-container col-sm-12 mt-3" id="parent">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+</body>
+
+<script>
+
+    $(document).ready(function () {
+        // alert(x.replace(/[^\w\s]/gi, ''));
+        let nome1 = $('#nome1').val("Maria");
+        let nome2 = $('#nome2').val("Jose");
+
+        setChart();
+    });
+
+    $('#btnPesquisar').click(function (e) {
+        setChart();
+        return false;
+    });
+
+    function setChart() {
+        //Limpando o gráfico
+        $('#myChart').remove(); // this is my <canvas> element
+        $('#parent').append(' <canvas id="myChart"></canvas>');
+
+
+        let nome1 = $('#nome1').val();
+        let nome2 = $('#nome2').val();
+
+        const data = nomesFrequencia(nome1);
+        let labels = [];
+        let dataset = [];
+        let label = data.nome;
+        for (i = 0; i < data.data.length; i++) {
+            let periodo = data.data[i].periodo.replace("[", "");
+            if (periodo.endsWith('[')) {
+                periodo = periodo.substring(0, periodo.length - 1);
+            }
+
+            labels.push(periodo);
+            dataset.push(data.data[i].frequencia);
+        }
+
+
+        const data2 = nomesFrequencia(nome2);
+
+        let labels2 = [];
+        let dataset2 = [];
+        let label2 = data2.nome;
+        for (i = 0; i < data2.data.length; i++) {
+            let periodo = data2.data[i].periodo.replace("[", "");
+            if (periodo.endsWith('[')) {
+                periodo = periodo.substring(0, periodo.length - 1);
+            }
+
+            dataset2.push(data2.data[i].frequencia);
+        }
+
+
+        let ctx = document.getElementById('myChart').getContext('2d');
+        let myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                        label: label,
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        fill: false,
+                        data: dataset,
+                    },
+                    {
+                        label: label2,
+                        backgroundColor: 'rgb(54, 162, 235)',
+                        borderColor: 'rgb(54, 162, 235)',
+                        fill: false,
+                        data: dataset2,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Comparativo - Frequência por Período'
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                    }],
+                    yAxes: [{
+                        display: true,
+                        // type: 'logarithmic',
+                    }]
+                }
+            }
+        });
+    }
+</script>
+
+</html>

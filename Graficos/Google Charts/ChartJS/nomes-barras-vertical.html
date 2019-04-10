@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Gráficos de Barras</title>
+    <title>Nomes - Popularidade por década</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="../../scripts/ibge.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
@@ -25,17 +25,24 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-dark bg-dark justify-content-between">
-        <a class="navbar-brand text-white" href="#">Nomes mais populares por década:</a>
-        <form class="form-inline">
-            <input class="form-control mr-sm-2" type="number" max="2010" min="1900" step="10" placeholder="Ex.: 1950"
-                id="srcDecada">
-            <button class="btn btn-primary my-2 my-sm-0" id="btnPesquisar" type="submit">Pesquisar</button>
-        </form>
-    </nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Década:</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="chart-container" id="parent" style="position: relative; height:50%; width:80%; margin-left: 10%;">
-        <canvas id="myChart"></canvas>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <form class="form-inline my-2 my-lg-0 ">
+                <input class="form-control mr-sm-2" type="number" step="10" id="srcDecada" max="2010" min="1940" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="btnPesquisar">Pesquisar</button>
+            </form>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="chart-container col-sm-12 mt-5" id="parent">
+            <canvas id="myChart"></canvas>
+        </div>
     </div>
 </body>
 
@@ -45,7 +52,7 @@
         //Limpando o gráfico
         $('#myChart').remove(); // this is my <canvas> element
         $('#parent').append(' <canvas id="myChart"></canvas>');
-       
+
         var ctx = document.getElementById('myChart').getContext('2d');
         var myChart = new Chart(ctx, {
             type: 'bar',
@@ -116,7 +123,12 @@
                             beginAtZero: true
                         }
                     }]
-                }
+                },
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Nomes mais populares da década'
+                },
             }
         });
     }
@@ -128,13 +140,14 @@
         setChart();
     });
 
-    $('#btnPesquisar').click(function () {
+    $('#btnPesquisar').click(function (e) {
         setChart();
+        return false;
     });
 
     function setChart(data) {
         let decada = $('#srcDecada').val();
-        if (decada != '' && decada != null) {
+        if (decada != '' || decada != null) {
             const data = nomesRanking(decada);
             labels = [];
             values = [];
